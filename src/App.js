@@ -3,11 +3,11 @@ import AuthForm from "./components/Authentication/AuthForm";
 
 
 const App = () => {
-  return(
+
+  
+  return (
     <AuthForm/>
-  )
-}
-
-
+  );
+};
 
 export default App;

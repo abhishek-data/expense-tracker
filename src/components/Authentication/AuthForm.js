@@ -6,10 +6,15 @@ const AuthForm = (props) => {
   const emailInput = useRef();
   const passwordInput = useRef();
 
+  const loginSignupHandler = () => {
+    setIsLoggedIn(prev => !prev)
+  }
+
   const formSubmitHandler = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInput.current.value;
     const enteredPassword = passwordInput.current.value;
+    
 
     let url;
     if (isLoggedIn) {
@@ -20,7 +25,7 @@ const AuthForm = (props) => {
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ";
     }
 
-    try{
+    try {
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -33,36 +38,38 @@ const AuthForm = (props) => {
         },
       });
       if (!response.ok) {
-        let errorMessage = 'Authentication Failed'
+        let errorMessage = "Authentication Failed";
         throw new Error(errorMessage);
       }
-      const data = await response.json()
-      console.log(data.idToken)
-      console.log('User has successfully signed up')
-    }catch(err){
-      alert(err)
+      const data = await response.json();
+      console.log(data.idToken);
+      console.log("User has successfully signed up");
+    } catch (err) {
+      alert(err);
     }
-
-    
-
   };
 
   return (
-    <div className={classes.auth}>
-      <h1>SignUp</h1>
-      <form onSubmit={formSubmitHandler}>
-        <div className={classes.control}>
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" ref={emailInput} required/>
-        </div>
-        <div className={classes.control}>
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" ref={passwordInput} required/>
-        </div>
-        <div className={classes.actions}>
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
+    <div>
+      <div className={classes.auth}>
+        <h1>{isLoggedIn? "Login": "SignUp"}</h1>
+        <form onSubmit={formSubmitHandler}>
+          <div className={classes.control}>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" ref={emailInput} required />
+          </div>
+          <div className={classes.control}>
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" ref={passwordInput} required />
+          </div>
+          <div className={classes.actions}>
+            <button type="submit">{isLoggedIn? "Login": "SignUp"}</button>
+          </div>
+        </form>
+      </div>
+      <div className={classes.actions}>
+        <button onClick={loginSignupHandler}>{isLoggedIn?"Dont have an account? SignUp":"Have an account? Login"}</button>
+      </div>
     </div>
   );
 };
