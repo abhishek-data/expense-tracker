@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import AuthForm from "./components/Authentication/AuthForm";
 import Header from "./components/Layout/Header";
 import ContactDetails from "./Pages/ContactDetails";
+import DailyExpense from "./Pages/DailyExpense";
 import Welcome from "./Pages/Welcome";
 import ExpenseContext from "./store/cart-context";
 
@@ -23,6 +24,9 @@ const App = () => {
       </Route>
       <Route path="/contact">
         <ContactDetails />
+      </Route>
+      <Route path="/expense">
+        <DailyExpense/>
       </Route>
       </Switch>
     </Fragment>

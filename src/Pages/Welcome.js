@@ -1,9 +1,10 @@
 import classes from "./Welcome.module.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import ExpenseContext from "../store/cart-context";
 const Welcome = (props) => {
   const ctx = useContext(ExpenseContext);
+  const history = useHistory()
   const verifyEmailHandler = async () => {
     try {
       const response = await fetch(
@@ -47,6 +48,9 @@ const Welcome = (props) => {
       </header>
       <div className={classes.actions}>
         <button onClick={verifyEmailHandler}>Verify Email</button>
+      </div>
+      <div className={classes.actions}>
+        <button onClick={() => history.push('/expense')}>Add Expense</button>
       </div>
     </main>
   );
