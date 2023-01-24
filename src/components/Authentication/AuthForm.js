@@ -1,11 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import classes from "./AuthForm.module.css";
+
+import ExpenseContext from "../../store/cart-context";
+
+
 
 const AuthForm = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const emailInput = useRef();
   const passwordInput = useRef();
 
+  const ctx = useContext(ExpenseContext)
   const loginSignupHandler = () => {
     setIsLoggedIn(prev => !prev)
   }
@@ -42,6 +47,8 @@ const AuthForm = (props) => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
+
+      ctx.login(data.idToken)
       console.log(data.idToken);
       console.log("User has successfully signed up");
     } catch (err) {

@@ -1,0 +1,27 @@
+.header {
+    background-color: rgb(218, 167, 167);
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-title {
+    margin: 0;
+    font-size: 36px;
+  }
+
+  .header-span {
+    color: blue;
+  }
+  
+  .header-link {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 200px;
+  }
+  
+  .header-span:hover {
+    color: #ccc;
+  }
+  
