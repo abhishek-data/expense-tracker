@@ -40,6 +40,10 @@ const Welcome = (props) => {
           Your profile is incomplete.
           <span className={classes["header-span"]}>Complete Now</span>
         </Link>
+        <div className={classes.actions}>
+          <button onClick={ctx.logout}>Logout</button>
+          </div>
+        
       </header>
       <div className={classes.actions}>
         <button onClick={verifyEmailHandler}>Verify Email</button>

@@ -18,7 +18,8 @@ const App = () => {
         {ctx.isLoggedIn && <Redirect to="/welcome" />}
       </Route>
       <Route path="/welcome">
-        <Welcome />
+        {ctx.isLoggedIn && <Welcome />}
+        {!ctx.isLoggedIn && <Redirect to="/"/>}
       </Route>
       <Route path="/contact">
         <ContactDetails />
