@@ -56,6 +56,31 @@ const AuthForm = (props) => {
     }
   };
 
+  const forgotPasswordHandler = async() => {
+    try {
+      const response = await fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            requestType: "PASSWORD_RESET" ,
+            email: emailInput.current.value,
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        let errorMessage = "Authentication Failed";
+        throw new Error(errorMessage);
+
+        const data = await response.json();
+      }
+    } catch (err) {
+      alert(err);
+    }
+  }
 
   
 
@@ -74,6 +99,9 @@ const AuthForm = (props) => {
           </div>
           <div className={classes.actions}>
             <button type="submit">{isLoggedIn? "Login": "SignUp"}</button>
+          </div>
+          <div className={classes.actions}>
+            <button type="button" onClick={forgotPasswordHandler}>{isLoggedIn && "Forgot Password"}</button>
           </div>
         </form>
       </div>
