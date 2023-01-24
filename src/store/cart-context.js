@@ -7,6 +7,7 @@ const ExpenseContext = React.createContext({
 
 export const ExpenseContextProvider = (props) => {
     const [token, setToken] = useState(null);
+    const [profile, setProfile] = useState(null)
 
     const userIsLoggedIn = !!token;
 
@@ -14,10 +15,16 @@ export const ExpenseContextProvider = (props) => {
         setToken(token)
     }
 
+    const profileHandler = (data) =>{
+        setProfile(data)
+    }
+
     const contextData = {
         isLoggedIn: userIsLoggedIn,
         login: loginHandler,
-        token: token
+        token: token,
+        profile: profile,
+        profileHandler: profileHandler
     }
 
     return (

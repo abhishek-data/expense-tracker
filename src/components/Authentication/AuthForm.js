@@ -56,6 +56,9 @@ const AuthForm = (props) => {
     }
   };
 
+
+  
+
   return (
     <div>
       <div className={classes.auth}>
@@ -63,7 +66,7 @@ const AuthForm = (props) => {
         <form onSubmit={formSubmitHandler}>
           <div className={classes.control}>
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" ref={emailInput} required />
+            <input type="email" id="email" ref={emailInput}  required />
           </div>
           <div className={classes.control}>
             <label htmlFor="password">Password</label>
