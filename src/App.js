@@ -1,6 +1,7 @@
 import React, { Fragment, useContext } from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import AuthForm from "./components/Authentication/AuthForm";
+import Header from "./components/Layout/Header";
 import ContactDetails from "./Pages/ContactDetails";
 import Welcome from "./Pages/Welcome";
 import ExpenseContext from "./store/cart-context";
@@ -10,6 +11,8 @@ const App = () => {
   console.log(ctx.isLoggedIn);
   return (
     <Fragment>
+      {/* <Header/> */}
+      <Switch>
       <Route path="/" exact>
         {!ctx.isLoggedIn && <AuthForm />}
         {ctx.isLoggedIn && <Redirect to="/welcome" />}
@@ -20,6 +23,7 @@ const App = () => {
       <Route path="/contact">
         <ContactDetails />
       </Route>
+      </Switch>
     </Fragment>
   );
 };
