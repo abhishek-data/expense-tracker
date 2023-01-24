@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classes from "./DailyExpense.module.css";
 
 const DailyExpense = () => {
@@ -6,16 +6,60 @@ const DailyExpense = () => {
   const amountRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
+  console.log(expense)
 
-  const expenseSubmitHandler = (event) => {
+  const expenseSubmitHandler = async (event) => {
     event.preventDefault();
     const expenseData = {
       amount: amountRef.current.value,
       description: descriptionRef.current.value,
       category: categoryRef.current.value,
+      __id: Math.random().toString()
     };
-    setExpense((prev) => [...prev, expenseData]);
+    // setExpense((prev) => [...prev, expenseData]);
+    try {
+      const response = await fetch(
+        "https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
+        {
+          method: "POST",
+          body: JSON.stringify(expenseData),
+          headers: {
+            "content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        let errorMessage = "Authentication Failed";
+        throw new Error(errorMessage);
+      }
+      const data = await response.json();
+    } catch (err) {
+      alert(err);
+    }
   };
+
+  useEffect(() => {
+    const fetchExpense = async() => {
+      try {
+        const response = await fetch("https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
+        {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            }
+        });
+        const data = response.json();
+        const newData = [];
+        for(let key in data){
+            newData.push({ id: key, ...data[key] })
+        }
+        setExpense(newData)
+      } catch (err) {
+        alert(err);
+      }
+    };
+    fetchExpense()
+  }, []);
 
   return (
     <div>
@@ -49,8 +93,12 @@ const DailyExpense = () => {
             return (
               <li key={data.description} className={classes.list}>
                 <span className={classes.listitem}>Amount: {data.amount}</span>
-                <span className={classes.listitem}>description: {data.description}</span>
-                <span className={classes.listitem}>Category: {data.category}</span>
+                <span className={classes.listitem}>
+                  description: {data.description}
+                </span>
+                <span className={classes.listitem}>
+                  Category: {data.category}
+                </span>
               </li>
             );
           })}
