@@ -3,14 +3,12 @@ import ExpenseContext from "../store/cart-context";
 import classes from "./ContactDetails.module.css";
 
 const ContactDetails = () => {
-  
   const ctx = useContext(ExpenseContext);
   const fullNameRef = useRef();
   const photoUrl = useRef();
-  
 
   useEffect(() => {
-    async function fetchData(){
+    async function fetchData() {
       const response = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
         {
@@ -23,14 +21,14 @@ const ContactDetails = () => {
           },
         }
       );
-      const data = await response.json()
-      ctx.profileHandler(data)
-      console.log(data)
+      const data = await response.json();
+      ctx.profileHandler(data);
+      console.log(data);
     }
-    
-  },[ctx.token]);
+    fetchData()
+  }, [ctx.token]);
 
-  console.log(ctx.token,ctx.profile );
+  console.log(ctx.token, ctx.profile);
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
@@ -64,11 +62,10 @@ const ContactDetails = () => {
       alert(err);
     }
   };
-  
-  let Name = ''
-  let url = ''
-  
-  async function fetchData(){
+
+
+
+  async function fetchData() {
     const response = await fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
       {
@@ -81,13 +78,10 @@ const ContactDetails = () => {
         },
       }
     );
-    const data = await response.json()
-    
-    // Name = await data.users.displayName;
-    // url = await data.users.photoUrl;
+    const data = await response.json();
+
     ctx.profileHandler(data);
   }
-  
 
   return (
     <div className={classes.auth}>
@@ -95,11 +89,21 @@ const ContactDetails = () => {
       <form onSubmit={formSubmitHandler}>
         <div className={classes.control}>
           <label>Full Name</label>
-          <input type="text" required ref={fullNameRef} value={ctx.profile.users.displayName}/>
+          <input
+            type="text"
+            required
+            ref={fullNameRef}
+            value={ctx.profile.users.displayName}
+          />
         </div>
         <div className={classes.control}>
           <label>Profile Photo Url</label>
-          <input type="text" required ref={photoUrl} value={ctx.profile.users.photoUrl} />
+          <input
+            type="text"
+            required
+            ref={photoUrl}
+            value={ctx.profile.users.photoUrl}
+          />
         </div>
         <div className={classes.actions}>
           <button>Update</button>

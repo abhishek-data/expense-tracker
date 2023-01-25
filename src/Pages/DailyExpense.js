@@ -1,12 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import ExpenseContext from "../store/cart-context";
 import classes from "./DailyExpense.module.css";
+import ExpenseInput from "./ExpenseInput";
 
 const DailyExpense = () => {
-  const [expense, setExpense] = useState([]);
+  //   const [expense, setExpense] = useState([]);
+  const ctx = useContext(ExpenseContext);
   const amountRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
-  console.log(expense)
+  console.log(ctx.expense);
 
   const expenseSubmitHandler = async (event) => {
     event.preventDefault();
@@ -14,9 +17,10 @@ const DailyExpense = () => {
       amount: amountRef.current.value,
       description: descriptionRef.current.value,
       category: categoryRef.current.value,
-      __id: Math.random().toString()
+      __id: Math.random().toString(),
     };
-    // setExpense((prev) => [...prev, expenseData]);
+    
+    // ctx.expenseHandler(expenseData);
     try {
       const response = await fetch(
         "https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
@@ -33,34 +37,43 @@ const DailyExpense = () => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
+      ctx.expenseHandler({id: data.name, ...expenseData})
+      console.log(data)
     } catch (err) {
       alert(err);
     }
+    // amountRef.current.value = "";
+    // descriptionRef.current.value = "";
   };
 
   useEffect(() => {
-    const fetchExpense = async() => {
+    const fetchExpense = async () => {
       try {
-        const response = await fetch("https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
-        {
+        const response = await fetch(
+          "https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
+          {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-            }
-        });
-        const data = response.json();
+            },
+          }
+        );
+        const data = await response.json();
         const newData = [];
-        for(let key in data){
-            newData.push({ id: key, ...data[key] })
+        for (let key in data) {
+          newData.push({ id: key, ...data[key] });
+          console.log(newData);
         }
-        setExpense(newData)
+        // setExpense((prev) => newData);
+        ctx.expenseFetcher(newData);
       } catch (err) {
         alert(err);
       }
     };
-    fetchExpense()
+    fetchExpense();
   }, []);
 
+  console.log(ctx.expense)
   return (
     <div>
       <div className={classes.auth}>
@@ -68,15 +81,15 @@ const DailyExpense = () => {
         <form onSubmit={expenseSubmitHandler}>
           <div className={classes.control}>
             <label htmlFor="amount">Amount</label>
-            <input type="number" id="amount" required ref={amountRef} />
+            <input type="number" id="amount" required ref={amountRef} defaultValue={ctx.expenseToEdit? ctx.expenseToEdit.amount: ''}/>
           </div>
           <div className={classes.control}>
             <label htmlFor="description">description</label>
-            <input type="text" id="description" required ref={descriptionRef} />
+            <input type="text" id="description" required ref={descriptionRef} defaultValue={ctx.expenseToEdit? ctx.expenseToEdit.description: ''}/>
           </div>
           <div>
             <label htmlFor="category">Category</label>
-            <select id="category" className={classes.select} ref={categoryRef}>
+            <select id="category" className={classes.select} ref={categoryRef} defaultValue={ctx.expenseToEdit? ctx.expenseToEdit.category: ''}>
               <option>Food</option>
               <option>Shopping</option>
               <option>Travel</option>
@@ -89,18 +102,8 @@ const DailyExpense = () => {
       </div>
       <div>
         <ul>
-          {expense.map((data) => {
-            return (
-              <li key={data.description} className={classes.list}>
-                <span className={classes.listitem}>Amount: {data.amount}</span>
-                <span className={classes.listitem}>
-                  description: {data.description}
-                </span>
-                <span className={classes.listitem}>
-                  Category: {data.category}
-                </span>
-              </li>
-            );
+          {ctx.expense.map((data) => {
+            return <ExpenseInput data={data} key={data.id} />;
           })}
         </ul>
       </div>
