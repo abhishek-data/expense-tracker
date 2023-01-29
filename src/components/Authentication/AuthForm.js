@@ -1,18 +1,21 @@
 import React, { useContext, useRef, useState } from "react";
 import classes from "./AuthForm.module.css";
-
-import ExpenseContext from "../../store/cart-context";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../store/auth-slice";
+// import ExpenseContext from "../../store/cart-context";
 
 
 
 const AuthForm = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch()
+  const isLoggedIn = useSelector(state => state.auth.signup)
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const emailInput = useRef();
   const passwordInput = useRef();
 
-  const ctx = useContext(ExpenseContext)
+  // const ctx = useContext(ExpenseContext)
   const loginSignupHandler = () => {
-    setIsLoggedIn(prev => !prev)
+    dispatch(authActions.signUp())
   }
 
   const formSubmitHandler = async (event) => {
@@ -47,8 +50,8 @@ const AuthForm = (props) => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
-
-      ctx.login(data.idToken)
+      dispatch(authActions.login({token: data.idToken}))
+      // ctx.login(data.idToken)
       console.log(data.idToken);
       console.log("User has successfully signed up");
     } catch (err) {

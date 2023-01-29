@@ -2,9 +2,15 @@ import classes from "./Welcome.module.css";
 import { Link, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import ExpenseContext from "../store/cart-context";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store/auth-slice"; 
+
 const Welcome = (props) => {
-  const ctx = useContext(ExpenseContext);
+  const dispatch = useDispatch()
+  const token = useSelector(state => state.auth.token)
   const history = useHistory()
+
+
   const verifyEmailHandler = async () => {
     try {
       const response = await fetch(
@@ -13,7 +19,7 @@ const Welcome = (props) => {
           method: "POST",
           body: JSON.stringify({
             requestType: "VERIFY_EMAIL",
-            idToken: ctx.token,
+            idToken: token,
           }),
           headers: {
             "content-type": "application/json",
@@ -42,7 +48,7 @@ const Welcome = (props) => {
           <span className={classes["header-span"]}>Complete Now</span>
         </Link>
         <div className={classes.actions}>
-          <button onClick={ctx.logout}>Logout</button>
+          <button onClick={() => dispatch(authActions.logout())}>Logout</button>
           </div>
         
       </header>

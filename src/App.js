@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from "react";
+import { useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import AuthForm from "./components/Authentication/AuthForm";
 import Header from "./components/Layout/Header";
@@ -8,19 +9,20 @@ import Welcome from "./Pages/Welcome";
 import ExpenseContext from "./store/cart-context";
 
 const App = () => {
-  const ctx = useContext(ExpenseContext);
-  console.log(ctx.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.auth.isAuthenticated)
+  
+  console.log(isLoggedIn);
   return (
     <Fragment>
       {/* <Header/> */}
       <Switch>
       <Route path="/" exact>
-        {!ctx.isLoggedIn && <AuthForm />}
-        {ctx.isLoggedIn && <Redirect to="/welcome" />}
+        {!isLoggedIn && <AuthForm />}
+        {isLoggedIn && <Redirect to="/welcome" />}
       </Route>
       <Route path="/welcome">
-        {ctx.isLoggedIn && <Welcome />}
-        {!ctx.isLoggedIn && <Redirect to="/"/>}
+        {isLoggedIn && <Welcome />}
+        {!isLoggedIn && <Redirect to="/"/>}
       </Route>
       <Route path="/contact">
         <ContactDetails />
