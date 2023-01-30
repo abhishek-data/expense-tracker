@@ -8,6 +8,7 @@ import DailyExpense from "./Pages/DailyExpense";
 import Welcome from "./Pages/Welcome";
 import { authActions } from "./store/auth-slice";
 import { fetchExpenseData, sendExpenseData } from "./store/expense-actions";
+import './App.css'
 
 
 let isInitial = true;
@@ -23,11 +24,11 @@ const App = () => {
     if (savedToken) {
       dispatch(authActions.login({ token: savedToken }));
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem("token", token);
-  });
+  },[token]);
 
 
   useEffect(() => {

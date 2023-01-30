@@ -95,5 +95,27 @@
   }
 
   .listitem {
-    margin-left: 30px;
+    margin-left: 40px;
   }
+
+
+  .dark-theme {
+    background-color: #333;
+    color: rgb(66, 48, 48);
+  }
+  
+  .dark-theme h1 {
+    color: #fff;
+  }
+  
+  .dark-theme a {
+    color: #00e676;
+  }
+  
+  .dark-theme input,
+  .dark-theme textarea {
+    background-color: #444;
+    border-color: #00e676;
+    color: #fff;
+  }
+  

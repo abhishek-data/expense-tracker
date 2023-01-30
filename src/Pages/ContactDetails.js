@@ -1,34 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import ExpenseContext from "../store/cart-context";
+import React, { useContext, useEffect, useRef } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import classes from "./ContactDetails.module.css";
+import { profileActions } from "../store/profile-slice";
 
 const ContactDetails = () => {
-  const ctx = useContext(ExpenseContext);
+  const dispatch = useDispatch()
   const fullNameRef = useRef();
   const photoUrl = useRef();
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            idToken: ctx.token,
-          }),
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      ctx.profileHandler(data);
-      console.log(data);
-    }
-    fetchData()
-  }, [ctx.token]);
-
-  console.log(ctx.token, ctx.profile);
+  const token = useSelector(state => state.auth.token)
+  const profile = useSelector(state => state.profile)
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
@@ -40,10 +20,9 @@ const ContactDetails = () => {
         {
           method: "POST",
           body: JSON.stringify({
-            idToken: ctx.token,
+            idToken: token,
             displayName: enteredfullName,
             photoUrl: enteredphotoUrl,
-            // deleteAttribute: null,
             returnSecureToken: true,
           }),
           headers: {
@@ -56,7 +35,7 @@ const ContactDetails = () => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
-      ctx.login(data.idToken);
+      // ctx.login(data.idToken);
       console.log(data.idToken);
     } catch (err) {
       alert(err);
@@ -71,7 +50,7 @@ const ContactDetails = () => {
       {
         method: "POST",
         body: JSON.stringify({
-          idToken: ctx.token,
+          idToken: token,
         }),
         headers: {
           "content-type": "application/json",
@@ -80,9 +59,14 @@ const ContactDetails = () => {
     );
     const data = await response.json();
 
-    ctx.profileHandler(data);
+    dispatch(profileActions.replaceProfile(data));
   }
 
+  useEffect(() => {
+    fetchData()
+  }, [token]);
+
+  console.log(profile)
   return (
     <div className={classes.auth}>
       <h1>Contact Details</h1>
@@ -93,7 +77,7 @@ const ContactDetails = () => {
             type="text"
             required
             ref={fullNameRef}
-            value={ctx.profile.users.displayName}
+            
           />
         </div>
         <div className={classes.control}>
@@ -102,7 +86,7 @@ const ContactDetails = () => {
             type="text"
             required
             ref={photoUrl}
-            value={ctx.profile.users.photoUrl}
+            
           />
         </div>
         <div className={classes.actions}>

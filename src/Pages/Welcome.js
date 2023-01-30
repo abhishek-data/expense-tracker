@@ -1,7 +1,5 @@
 import classes from "./Welcome.module.css";
 import { Link, useHistory } from "react-router-dom";
-// import { useContext } from "react";
-// import ExpenseContext from "../store/cart-context";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/auth-slice"; 
 
