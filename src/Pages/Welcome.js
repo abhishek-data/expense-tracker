@@ -1,7 +1,7 @@
 import classes from "./Welcome.module.css";
 import { Link, useHistory } from "react-router-dom";
-import { useContext } from "react";
-import ExpenseContext from "../store/cart-context";
+// import { useContext } from "react";
+// import ExpenseContext from "../store/cart-context";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/auth-slice"; 
 
@@ -30,7 +30,7 @@ const Welcome = (props) => {
         let errorMessage = "Authentication Failed";
         throw new Error(errorMessage);
 
-        const data = await response.json();
+        
       }
     } catch (err) {
       alert(err);

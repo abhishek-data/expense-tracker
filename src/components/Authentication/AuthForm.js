@@ -1,28 +1,25 @@
-import React, { useContext, useRef, useState } from "react";
+import React, {useRef } from "react";
 import classes from "./AuthForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/auth-slice";
 // import ExpenseContext from "../../store/cart-context";
 
-
-
 const AuthForm = (props) => {
-  const dispatch = useDispatch()
-  const isLoggedIn = useSelector(state => state.auth.signup)
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.signup);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const emailInput = useRef();
   const passwordInput = useRef();
 
   // const ctx = useContext(ExpenseContext)
   const loginSignupHandler = () => {
-    dispatch(authActions.signUp())
-  }
+    dispatch(authActions.signUp());
+  };
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInput.current.value;
     const enteredPassword = passwordInput.current.value;
-    
 
     let url;
     if (isLoggedIn) {
@@ -50,7 +47,7 @@ const AuthForm = (props) => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
-      dispatch(authActions.login({token: data.idToken}))
+      dispatch(authActions.login({ token: data.idToken }));
       // ctx.login(data.idToken)
       console.log(data.idToken);
       console.log("User has successfully signed up");
@@ -59,14 +56,14 @@ const AuthForm = (props) => {
     }
   };
 
-  const forgotPasswordHandler = async() => {
+  const forgotPasswordHandler = async () => {
     try {
       const response = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
         {
           method: "POST",
           body: JSON.stringify({
-            requestType: "PASSWORD_RESET" ,
+            requestType: "PASSWORD_RESET",
             email: emailInput.current.value,
           }),
           headers: {
@@ -77,39 +74,41 @@ const AuthForm = (props) => {
       if (!response.ok) {
         let errorMessage = "Authentication Failed";
         throw new Error(errorMessage);
-
-        const data = await response.json();
       }
     } catch (err) {
       alert(err);
     }
-  }
-
-  
+  };
 
   return (
     <div>
       <div className={classes.auth}>
-        <h1>{isLoggedIn? "Login": "SignUp"}</h1>
+        <h1>{isLoggedIn ? "Login" : "SignUp"}</h1>
         <form onSubmit={formSubmitHandler}>
           <div className={classes.control}>
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" ref={emailInput}  required />
+            <input type="email" id="email" ref={emailInput} required />
           </div>
           <div className={classes.control}>
             <label htmlFor="password">Password</label>
             <input type="password" id="password" ref={passwordInput} required />
           </div>
           <div className={classes.actions}>
-            <button type="submit">{isLoggedIn? "Login": "SignUp"}</button>
+            <button type="submit">{isLoggedIn ? "Login" : "SignUp"}</button>
           </div>
           <div className={classes.actions}>
-            <button type="button" onClick={forgotPasswordHandler}>{isLoggedIn && "Forgot Password"}</button>
+            <button type="button" onClick={forgotPasswordHandler}>
+              {isLoggedIn && "Forgot Password"}
+            </button>
           </div>
         </form>
       </div>
       <div className={classes.actions}>
-        <button onClick={loginSignupHandler}>{isLoggedIn?"Dont have an account? SignUp":"Have an account? Login"}</button>
+        <button onClick={loginSignupHandler}>
+          {isLoggedIn
+            ? "Dont have an account? SignUp"
+            : "Have an account? Login"}
+        </button>
       </div>
     </div>
   );
