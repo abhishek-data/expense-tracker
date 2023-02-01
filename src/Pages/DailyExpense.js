@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import classes from "./DailyExpense.module.css";
 import ExpenseInput from "./ExpenseInput";
@@ -31,8 +31,26 @@ const DailyExpense = () => {
   };
 
   const themeHandler = () => {
-    dispatch(themeAction.toggleTheme())
+    dispatch(themeAction.toggleTheme({value: true}))
   }
+  useEffect(() => {
+    if(totalAmount < 10000) {
+      dispatch(themeAction.toggleTheme({value: false}))
+    }
+  })
+
+  console.log(expenseItem)
+  const handleDownload = () => {
+    const csvData = expenseItem.map((data) => `${data.amount},${data.category},${data.description},${data.id}\n`).join("");
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "data.csv");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   return (
     <div className={classes[theme ?"dark-theme": '']}>
@@ -89,7 +107,7 @@ const DailyExpense = () => {
       </div>
       <div className={classes.actions}>
         {totalAmount > 10000 && <button onClick={themeHandler}>Activate Premium</button>}
-        {theme && <button>Donload File</button>}
+        {totalAmount > 10000 && theme && <button onClick={handleDownload}>Donload File</button>}
       </div>
       
     </div>

@@ -1,10 +1,12 @@
+
 import { expenseActions } from "./expense-slice";
 
-export const fetchExpenseData = () => {
+
+export const fetchExpenseData = (email) => {
   return async (dispatch) => {
     const fetchData = async () => {
       const response = await fetch(
-        "https://expense-9578f-default-rtdb.firebaseio.com/expense.json"
+        `https://expense-9578f-default-rtdb.firebaseio.com/${email}.json`
       );
 
       if (!response.ok) {
@@ -26,16 +28,16 @@ export const fetchExpenseData = () => {
         })
       );
     } catch (error) {
-      alert(error);
+      // alert(error);
     }
   };
 };
 
-export const sendExpenseData = (expense) => {
+export const sendExpenseData = (expense, email) => {
   return async (dispatch) => {
     const sendRequest = async () => {
       const response = await fetch(
-        "https://expense-9578f-default-rtdb.firebaseio.com/expense.json",
+        `https://expense-9578f-default-rtdb.firebaseio.com/${email}.json`,
         {
           method: "PUT",
           body: JSON.stringify({

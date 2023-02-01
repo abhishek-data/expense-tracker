@@ -1,17 +1,15 @@
-import React, {useRef } from "react";
+import React, { useRef } from "react";
 import classes from "./AuthForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/auth-slice";
-// import ExpenseContext from "../../store/cart-context";
 
 const AuthForm = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.signup);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const emailInput = useRef();
   const passwordInput = useRef();
 
-  // const ctx = useContext(ExpenseContext)
   const loginSignupHandler = () => {
     dispatch(authActions.signUp());
   };
@@ -21,39 +19,61 @@ const AuthForm = (props) => {
     const enteredEmail = emailInput.current.value;
     const enteredPassword = passwordInput.current.value;
 
-    let url;
-    if (isLoggedIn) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ";
-    } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ";
-    }
 
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        let errorMessage = "Authentication Failed";
-        throw new Error(errorMessage);
+    if (!isLoggedIn) {
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: enteredEmail,
+              password: enteredPassword,
+              returnSecureToken: true,
+            }),
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          let errorMessage = "Authentication Failed";
+          throw new Error(errorMessage);
+        }
+        alert("Your Account Has Been Sucessfully Created You Can Now Login");
+      } catch (err) {
+        alert(err);
       }
-      const data = await response.json();
-      dispatch(authActions.login({ token: data.idToken }));
-      // ctx.login(data.idToken)
-      console.log(data.idToken);
-      console.log("User has successfully signed up");
-    } catch (err) {
-      alert(err);
+    } else {
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCEkInMlsAIwZ557ZvqVbnr65QB4ab2siQ",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: enteredEmail,
+              password: enteredPassword,
+              returnSecureToken: true,
+            }),
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          let errorMessage = "Authentication Failed";
+          throw new Error(errorMessage);
+        }
+        const data = await response.json();
+        console.log(enteredEmail);
+        const email = enteredEmail.replace("@", "").replace(".", "");
+        dispatch(authActions.login({ token: data.idToken, email: email }));
+      } catch (err) {
+        alert(err);
+      }
     }
+    emailInput.current.value = ''
+    passwordInput.current.value = ''
   };
 
   const forgotPasswordHandler = async () => {
@@ -97,9 +117,11 @@ const AuthForm = (props) => {
             <button type="submit">{isLoggedIn ? "Login" : "SignUp"}</button>
           </div>
           <div className={classes.actions}>
-            <button type="button" onClick={forgotPasswordHandler}>
-              {isLoggedIn && "Forgot Password"}
-            </button>
+            {isLoggedIn && (
+              <button type="button" onClick={forgotPasswordHandler}>
+                Forgot Password
+              </button>
+            )}
           </div>
         </form>
       </div>

@@ -1,13 +1,12 @@
 import classes from "./Welcome.module.css";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../store/auth-slice"; 
+import { authActions } from "../store/auth-slice";
 
 const Welcome = (props) => {
-  const dispatch = useDispatch()
-  const token = useSelector(state => state.auth.token)
-  const history = useHistory()
-
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const history = useHistory();
 
   const verifyEmailHandler = async () => {
     try {
@@ -27,8 +26,6 @@ const Welcome = (props) => {
       if (!response.ok) {
         let errorMessage = "Authentication Failed";
         throw new Error(errorMessage);
-
-        
       }
     } catch (err) {
       alert(err);
@@ -47,14 +44,13 @@ const Welcome = (props) => {
         </Link>
         <div className={classes.actions}>
           <button onClick={() => dispatch(authActions.logout())}>Logout</button>
-          </div>
-        
+        </div>
       </header>
       <div className={classes.actions}>
         <button onClick={verifyEmailHandler}>Verify Email</button>
       </div>
       <div className={classes.actions}>
-        <button onClick={() => history.push('/expense')}>Add Expense</button>
+        <button onClick={() => history.push("/expense")}>Add Expense</button>
       </div>
     </main>
   );
