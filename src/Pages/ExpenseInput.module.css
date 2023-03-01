@@ -1,4 +1,5 @@
 .list {
+    list-style-type: none;
     font: inherit;
     background-color: #f1e1fc;
     color: #38015c;

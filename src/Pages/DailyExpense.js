@@ -29,6 +29,14 @@ const DailyExpense = () => {
     descriptionRef.current.value = "";
     categoryRef.current.value = "";
   };
+  
+  const editExpenseHandler = (data) => {
+    amountRef.current.value = data.amount;
+    descriptionRef.current.value = data.description;
+    categoryRef.current.value = data.category;
+    dispatch(expenseActions.editExpense(data))
+  } 
+
 
   const themeHandler = () => {
     dispatch(themeAction.toggleTheme({value: true}))
@@ -98,7 +106,7 @@ const DailyExpense = () => {
       <div>
         <ul>
           {expenseItem.map((data) => {
-            return <ExpenseInput data={data} key={data.id} />;
+            return <ExpenseInput data={data} key={data.id} onEdit={editExpenseHandler}/>;
           })}
         </ul>
       </div>
