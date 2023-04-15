@@ -115,7 +115,7 @@ const DailyExpense = () => {
       </div>
       <div className={classes.actions}>
         {totalAmount > 10000 && <button onClick={themeHandler}>Activate Premium</button>}
-        {totalAmount > 10000 && theme && <button onClick={handleDownload}>Donload File</button>}
+        {totalAmount > 10000 && theme && <button onClick={handleDownload}>Download File</button>}
       </div>
       
     </div>
